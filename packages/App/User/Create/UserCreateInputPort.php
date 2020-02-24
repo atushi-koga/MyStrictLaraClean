@@ -5,5 +5,5 @@ namespace Package\App\User\Create;
 
 interface UserCreateInputPort
 {
-    public function handle(UserCreateInput $input): void;
+    public function handle(UserCreateRequest $request): void;
 }

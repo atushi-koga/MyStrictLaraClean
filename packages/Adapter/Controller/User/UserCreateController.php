@@ -4,6 +4,7 @@ namespace Package\Adapter\Controller\User;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Package\App\User\Create\UserCreateRequest;
 use Package\App\User\Create\UserCreateInputPort;
 
 class UserCreateController extends Controller
@@ -18,8 +19,9 @@ class UserCreateController extends Controller
         $this->inputPort = $inputPort;
     }
 
-    public function createUser(Request $request)
+    public function __invoke(Request $request)
     {
-
+        $input = new UserCreateRequest($request->input('name'));
+        $this->inputPort->handle($input);
     }
 }

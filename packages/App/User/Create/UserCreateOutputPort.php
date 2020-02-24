@@ -5,5 +5,5 @@ namespace Package\App\User\Create;
 
 interface UserCreateOutputPort
 {
-
+    public function handle(UserCreateResponse $response);
 }
