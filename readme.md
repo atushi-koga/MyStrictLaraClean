@@ -56,3 +56,38 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+
+## クリーンアーキテクチャの各層について
+
+- エンティティ
+ビジネスルールを含むコード。
+DDDでいうドメイン層。packages/Domain 配下に格納。
+
+- ユースケース
+システムのユースケースを含むコード。
+ユースケースはエンティティに依存し、エンティティはユースケースに依存しない。
+入力としてリクエストデータ構造を受け取り、出力としてレスポンスデータ構造を戻す。どちらもシンプルな構造でフレームワークに依存したものではない。
+ユーザインターフェースに関する事も把握しない。
+DDDで言うアプリケーション層。packages/App 配下に格納。
+
+- インターフェースアダプター
+ユースケースやエンティティに便利なフォーマットから、DBやWEBなどの外部エージェントに便利なフォーマットにデータを変換するアダプター。
+コントローラ・ゲートウェイ・プレゼンターがこの層にあたる。
+packages/Adapter 配下に格納。
+
+ソースコードの依存性は内側の層だけに向かっていなければならない。
+
+## InputData
+Controllerはウェブなどの外部から入力されたデータを受け取り、ユースケースにとって都合のいい構造に変換してユースケースに渡す。
+その変換されたフォーマットの事をInputDataとしている。
+
+## OutputData
+ユースケースでは、自身にとって都合のいいフォーマットから、ウェブなどの外部エージェントに便利なフォーマットにデータを変換して、プレゼンターに渡す。
+その変換されたフォーマットの事をOutputDataとしている。
+
+## ViewModel
+ここに含まれるのはViewがデータの表示に使用する文字列やフラグ。
+例えば、ユースケース層の戻り値であるOutputDataにDateオブジェクトが含まれることもあるが、
+Presenterはユーザのために適切にフォーマットされた文字列を含んだViewModelを読み込む。
+Viewでは、ViewModelからHTMLページにデータを移動することのみを任せる。
